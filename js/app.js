@@ -3,16 +3,25 @@ let listaAmigos = [];
 
 function adicionar() {
     let amigo = document.getElementById('nome-amigo');
+    let nomeAmigo = amigo.value.toUpperCase().trim();
+
+    if (nomeAmigo == '') {
+        alert('Não é possível adicionar um amigo vazio!');
+        amigo.focus();
+        return;
+    }
+
+
     let lista = document.getElementById('lista-amigos');
 
-    if (listaAmigos.includes(amigo.value)) {
+    if (listaAmigos.includes(nomeAmigo)) {
         alert('Amigo já adicionado!');
         amigo.value = '';
         amigo.focus();
         return;
     }
 
-    listaAmigos.push(amigo.value);
+    listaAmigos.push(nomeAmigo);
 
 
     if (lista.textContent == '') {
@@ -34,10 +43,11 @@ function adicionar() {
 function sortear() {
     apagarSorteio();
     
-    if (listaAmigos.length < 2) {
-        alert('Adicione pelo menos 2 amigos para sortear!');
+    if (listaAmigos.length < 4) {
+        alert('Adicione pelo menos 4 amigos para sortear!');
         return;
     }
+
     embaralhar(listaAmigos);
 
     let sorteio = document.getElementById('lista-sorteio');

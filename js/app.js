@@ -1,12 +1,18 @@
-let amigos = [];
+let listaAmigos = [];
 
 
 function adicionar() {
     let amigo = document.getElementById('nome-amigo');
     let lista = document.getElementById('lista-amigos');
 
+    if (listaAmigos.includes(amigo.value)) {
+        alert('Amigo já adicionado!');
+        amigo.value = '';
+        amigo.focus();
+        return;
+    }
 
-    amigos.push(amigo.value);
+    listaAmigos.push(amigo.value);
 
 
     if (lista.textContent == '') {
@@ -17,32 +23,35 @@ function adicionar() {
 
 
     amigo.value = '';
+    amigo.focus();
 
 
     atualizarLista();
-    atualizarSorteio();
+    apagarSorteio();
 }
 
 
 function sortear() {
-    embaralhar(amigos);
-
+    apagarSorteio();
+    
+    if (listaAmigos.length < 2) {
+        alert('Adicione pelo menos 2 amigos para sortear!');
+        return;
+    }
+    embaralhar(listaAmigos);
 
     let sorteio = document.getElementById('lista-sorteio');
-    for (let i = 0; i < amigos.length; i++) {
-        if (i == amigos.length - 1) {
-            sorteio.innerHTML = sorteio.innerHTML + amigos[i] +' --> ' +amigos[0] + '<br/>';
-        } else {
-            sorteio.innerHTML = sorteio.innerHTML + amigos[i] +' --> ' +amigos[i + 1] + '<br/>';
-        }
+    for (let i = 0; i < listaAmigos.length; i++) {
+        sorteio.innerHTML = sorteio.innerHTML + listaAmigos[i] +' --> ' + listaAmigos[(i + 1) % listaAmigos.length] + '<br/>';
     }
+    document.getElementById('nome-amigo').focus();
 }
 
 
-function excluirAmigo(index) {
-    amigos.splice(index, 1);
+function excluirAmigo(posicao) {
+    listaAmigos.splice(posicao, 1);
     atualizarLista();
-    atualizarSorteio();
+    apagarSorteio();
 }
 
 
@@ -54,7 +63,7 @@ function embaralhar(lista) {
 }
 
 
-function atualizarSorteio() {
+function apagarSorteio() {
     let sorteio = document.getElementById('lista-sorteio');
     sorteio.innerHTML = '';
 }
@@ -65,10 +74,10 @@ function atualizarLista() {
     lista.innerHTML = '';
 
 
-    for (let i = 0; i < amigos.length; i++) {
+    for (let i = 0; i < listaAmigos.length; i++) {
         // Cria um elemento de parágrafo para cada amigo
         let paragrafo = document.createElement('p');
-        paragrafo.textContent = amigos[i];
+        paragrafo.textContent = listaAmigos[i];
        
         // Adiciona um evento de clique para excluir o amigo
         paragrafo.addEventListener('click', function() {
@@ -83,7 +92,9 @@ function atualizarLista() {
 
 
 function reiniciar() {
-    amigos = [];
+    listaAmigos = [];
     document.getElementById('lista-amigos').innerHTML = '';
     document.getElementById('lista-sorteio').innerHTML = '';
+    document.getElementById('nome-amigo').value = '';
+    document.getElementById('nome-amigo').focus();
 }
